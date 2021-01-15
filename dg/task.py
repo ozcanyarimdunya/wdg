@@ -1,6 +1,6 @@
 from PyQt5.QtCore import QThread, pyqtSignal
 
-from contrib import (
+from dg.contrib import (
     extract_variables,
     upload_files,
     generate_document
