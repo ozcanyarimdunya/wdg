@@ -1,5 +1,4 @@
 import re
-from datetime import datetime
 from pathlib import Path
 
 from PyQt5 import uic  # noqa
@@ -38,20 +37,27 @@ class GeneratorWindow(QWidget):
     def __init__(self, variables, name):
         """Initialise"""
         super().__init__()
-        ui_path = UI_DIR / 'generator.ui'
-        uic.loadUi(str(ui_path), self)
         self.variables = variables
         self.name = name
-
-        self.btn_ok = self.button_box.button(QDialogButtonBox.Ok)
-        self.btn_ok.setIcon(QIcon(str(ICONS_DIR.joinpath('ok.png'))))
-        self.btn_ok.setIconSize(QSize(16, 16))
-        self.btn_ok.clicked.connect(lambda: self.on_accepted())
-        self.btn_cancel = self.button_box.button(QDialogButtonBox.Cancel)
-        self.btn_cancel.setIcon(QIcon(str(ICONS_DIR.joinpath('cancel.png'))))
-        self.btn_cancel.setIconSize(QSize(16, 16))
-        self.btn_cancel.clicked.connect(lambda: self.on_rejected())
+        self.setup_ui()
+        self.setup_buttonbox()
         self.create_form_box()
+
+    def setup_ui(self):
+        """Setup ui"""
+        ui_path = UI_DIR / 'generator.ui'
+        uic.loadUi(str(ui_path), self)
+
+    def setup_buttonbox(self):
+        """Setup buttonbox"""
+        btn_ok = self.button_box.button(QDialogButtonBox.Ok)
+        btn_ok.setIcon(QIcon(str(ICONS_DIR.joinpath('ok.png'))))
+        btn_ok.setIconSize(QSize(16, 16))
+        btn_ok.clicked.connect(lambda: self.on_accepted())
+        btn_cancel = self.button_box.button(QDialogButtonBox.Cancel)
+        btn_cancel.setIcon(QIcon(str(ICONS_DIR.joinpath('cancel.png'))))
+        btn_cancel.setIconSize(QSize(16, 16))
+        btn_cancel.clicked.connect(lambda: self.on_rejected())
 
     @staticmethod
     def normalize(string):
@@ -80,9 +86,7 @@ class GeneratorWindow(QWidget):
             QMessageBox.information(self, 'Error', f'{template.name} document not found!')
             return
 
-        now = datetime.now().strftime('%Y-%m-%d %H-%M-%S')
-        name = f'{template.stem}_{now}.docx'
-        directory = str(Path.home().joinpath('Desktop').joinpath(name))
+        directory = str(Path.home().joinpath('Desktop').joinpath(template.name))
 
         options = QFileDialog.Options()
         filename, _ = QFileDialog.getSaveFileName(self, 'Save generated document', directory,
@@ -102,7 +106,7 @@ class GeneratorWindow(QWidget):
         parent = str(Path(filename).parent)
         file = str(Path(filename).name)
         QMessageBox.information(self, 'Success',
-                                f'Document <a href="file://{parent}">{file}</a> generated successfully!')
+                                f'Document <a href="file:///{parent}">{file}</a> generated successfully!')
 
     def on_accepted(self):
         """Accepted signal"""

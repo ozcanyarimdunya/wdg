@@ -1,4 +1,3 @@
-import shutil
 from pathlib import Path
 
 from PyQt5 import uic  # noqa
@@ -17,7 +16,10 @@ from dg import (
     UI_DIR,
     TEMPLATES_DIR
 )
-from dg.contrib import get_variables, get_unique_filename
+from dg.contrib import (
+    get_variables,
+    upload_files
+)
 from dg.generator import GeneratorWindow
 from dg.templates import TemplatesWindow
 
@@ -42,6 +44,13 @@ class HomeWindow(QMainWindow):
     def __init__(self):
         """Initialise"""
         super().__init__()
+        self.setup_ui()
+        self.setup_actions()
+        self.setup_toolbar()
+        self.show_initial_message()
+
+    def setup_ui(self):
+        """Setup ui"""
         ui_path = UI_DIR / 'home.ui'
         uic.loadUi(str(ui_path), self)
         self.setStyleSheet("""
@@ -54,10 +63,6 @@ class HomeWindow(QMainWindow):
         QToolBar { border: 0 solid; border-bottom: 1 solid #E3E3E3; border-top: 1 solid #E3E3E3; }
         QWidget#scrollWidget { background-color: white; }
         """)
-
-        self.setup_actions()
-        self.setup_toolbar()
-        self.show_initial_message()
 
     def setup_actions(self):
         """Setup actions"""
@@ -125,17 +130,8 @@ class HomeWindow(QMainWindow):
         if not filenames:
             return
 
-        self.upload_files(filenames)
-
-    def upload_files(self, filenames):
-        destinations = []
-        for filename in filenames:
-            file = Path(filename).name
-            destination = get_unique_filename(TEMPLATES_DIR.joinpath(file))
-            shutil.copy(filename, str(destination))
-            destinations.append(destination.name)
-        destinations = '<br/>'.join(destinations)
-        QMessageBox.information(self, 'Success', f'<b>{destinations}</b> uploaded successfully!')
+        uploaded_files = upload_files(filenames=filenames)
+        QMessageBox.information(self, 'Success', f'<b>{uploaded_files}</b> uploaded successfully!')
         self.on_templates_triggered()
 
     def on_templates_selected(self, name):

@@ -1,3 +1,4 @@
+import shutil
 from pathlib import Path
 
 import textract
@@ -7,6 +8,8 @@ from jinja2 import (
     Environment,
     meta
 )
+
+from dg import TEMPLATES_DIR
 
 
 def get_variables(filename):
@@ -21,9 +24,8 @@ def get_variables(filename):
 def get_unique_filename(filename: Path):
     """Get a unique filename"""
     if filename.exists():
-        directory = filename.parent
         file = f'{filename.stem}(1){filename.suffix}'
-        filename = Path(directory).joinpath(file)
+        filename = Path(filename.parent).joinpath(file)
         return get_unique_filename(filename)
     return filename
 
@@ -33,3 +35,15 @@ def generate_document(template, context, filename):
     doc = DocxTemplate(template)
     doc.render(context=context)
     doc.save(filename)
+
+
+def upload_files(filenames):
+    """Upload files"""
+    uploaded = ''
+    for filename in filenames:
+        file = Path(filename).name
+        destination = get_unique_filename(TEMPLATES_DIR.joinpath(file))
+        shutil.copy(filename, str(destination))
+        uploaded += f'<br/>{destination.name}'
+
+    return uploaded
