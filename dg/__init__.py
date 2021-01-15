@@ -9,6 +9,10 @@ ASSETS_DIR = BASE_DIR / 'assets'
 TEMPLATES_DIR = ASSETS_DIR / 'templates'
 ICONS_DIR = ASSETS_DIR / 'icons'
 UI_DIR = ASSETS_DIR / 'ui'
+
+if not ASSETS_DIR.exists():
+    os.mkdir(ASSETS_DIR)
+
 if not TEMPLATES_DIR.exists():
     os.mkdir(TEMPLATES_DIR)
 
