@@ -16,12 +16,8 @@ from dg import (
     UI_DIR,
     TEMPLATES_DIR
 )
-from dg.contrib import (
-    get_variables,
-    upload_files
-)
 from dg.generator import GeneratorWindow
-from dg.task import TaskUploadTemplates
+from dg.task import TaskExtractVariables, TaskUploadTemplates
 from dg.templates import TemplatesWindow
 
 
@@ -133,18 +129,10 @@ class HomeWindow(QMainWindow):
 
         self.task_upload = TaskUploadTemplates(parent=self, filenames=filenames)  # noqa
         self.task_upload.start()
-        self.task_upload.on_upload_start.connect(lambda: self.on_upload_templates_start())
-        self.task_upload.on_upload_finish.connect(lambda: self.on_upload_templates_finish())
+        self.task_upload.on_upload_start.connect(lambda: self.setEnabled(False))
+        self.task_upload.on_upload_finish.connect(lambda: self.setEnabled(True))
         self.task_upload.on_upload_success.connect(lambda files: self.on_upload_templates_success(files))
         self.task_upload.on_upload_fail.connect(lambda error: self.on_upload_templates_fail(error))
-
-    def on_upload_templates_start(self):
-        """On upload templates task start"""
-        self.setEnabled(False)
-
-    def on_upload_templates_finish(self):
-        """On upload templates task finish"""
-        self.setEnabled(True)
 
     def on_upload_templates_success(self, files):
         """On upload templates task success"""
@@ -163,18 +151,25 @@ class HomeWindow(QMainWindow):
             QMessageBox.information(self, 'Error', f'{filename} not found!')
             return
 
-        try:
-            variables = get_variables(filename=filename)
-        except Exception as ex:
-            QMessageBox.warning(self, 'Error', f'An error occurred when parsing template. <br/>Error: {ex}')
-            return
+        self.task_extract = TaskExtractVariables(parent=self, filename=filename)  # noqa
+        self.task_extract.start()
+        self.task_extract.on_extract_start.connect(lambda: self.setEnabled(False))
+        self.task_extract.on_extract_finish.connect(lambda: self.setEnabled(True))
+        self.task_extract.on_extract_success.connect(lambda v: self.on_extract_variables_success(v, name))
+        self.task_extract.on_extract_fail.connect(lambda error: self.on_extract_variables_fail(error))
 
+    def on_extract_variables_success(self, variables, name):
+        """On extract variables task success"""""
         window = GeneratorWindow(variables=variables, name=name)
         self.tab_widget.addTab(window, name)
         self.tab_widget.setCurrentWidget(window)
 
         index = self.tab_widget.indexOf(window)
         window.on_cancel.connect(lambda: self.on_tab_closed(index))
+
+    def on_extract_variables_fail(self, error):
+        """On extract variables task fail"""""
+        QMessageBox.warning(self, 'Error', f'An error occurred when parsing template. <br/>Error: {error}')
 
     def on_close_tab_triggered(self):
         """On close current tab triggered"""

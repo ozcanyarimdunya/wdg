@@ -12,7 +12,7 @@ from jinja2 import (
 from dg import TEMPLATES_DIR
 
 
-def get_variables(filename):
+def extract_variables(filename):
     """Extract text from template file and get jinja variables"""
     extracted = textract.process(filename)
     env = Environment(loader=BaseLoader())

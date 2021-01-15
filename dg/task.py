@@ -1,6 +1,34 @@
 from PyQt5.QtCore import QThread, pyqtSignal
 
-from contrib import upload_files, generate_document
+from contrib import (
+    extract_variables,
+    upload_files,
+    generate_document
+)
+
+
+class TaskExtractVariables(QThread):
+    """Task Extract Variables"""
+    on_extract_start = pyqtSignal()
+    on_extract_finish = pyqtSignal()
+    on_extract_success = pyqtSignal(set)
+    on_extract_fail = pyqtSignal(str)
+
+    def __init__(self, parent, filename):
+        """Initialise"""
+        super().__init__(parent=parent)
+        self.filename = filename
+
+    def run(self) -> None:
+        """Run task"""
+        try:
+            self.on_extract_start.emit()
+            variables = extract_variables(filename=self.filename)
+            self.on_extract_success.emit(variables)
+        except Exception as ex:
+            self.on_extract_fail.emit(str(ex))
+        finally:
+            self.on_extract_finish.emit()
 
 
 class TaskUploadTemplates(QThread):

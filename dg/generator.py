@@ -104,8 +104,8 @@ class GeneratorWindow(QWidget):
             filename=filename
         )
         self.task_generate.start()
-        self.task_generate.on_generate_start.connect(lambda: self.on_generate_document_start())
-        self.task_generate.on_generate_finish.connect(lambda: self.on_generate_document_finish())
+        self.task_generate.on_generate_start.connect(lambda: self.setEnabled(False))
+        self.task_generate.on_generate_finish.connect(lambda: self.setEnabled(True))
         self.task_generate.on_generate_success.connect(lambda file: self.on_generate_document_success(file))
         self.task_generate.on_generate_fail.connect(lambda error: self.on_generate_document_fail(error))
 
