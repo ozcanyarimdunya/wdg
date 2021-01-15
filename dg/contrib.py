@@ -39,11 +39,11 @@ def generate_document(template, context, filename):
 
 def upload_files(filenames):
     """Upload files"""
-    uploaded = ''
+    uploaded_files = []
     for filename in filenames:
         file = Path(filename).name
         destination = get_unique_filename(TEMPLATES_DIR.joinpath(file))
         shutil.copy(filename, str(destination))
-        uploaded += f'<br/>{destination.name}'
+        uploaded_files.append(destination.name)
 
-    return uploaded
+    return uploaded_files

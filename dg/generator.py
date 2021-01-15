@@ -22,7 +22,7 @@ from dg import (
     ICONS_DIR,
     TEMPLATES_DIR
 )
-from dg.contrib import generate_document
+from dg.task import TaskGenerateDocument
 
 
 class GeneratorWindow(QWidget):
@@ -97,16 +97,36 @@ class GeneratorWindow(QWidget):
         if not str(filename).endswith('.docx'):
             filename = f'{filename}.docx'
 
-        try:
-            generate_document(template=str(template), context=self.values, filename=filename)
-        except Exception as ex:
-            QMessageBox.warning(self, 'Error', f'An error occurred when generating document. <br/>Error: {ex}')
-            return
+        self.task_generate = TaskGenerateDocument(  # noqa
+            parent=self,
+            template=str(template),
+            context=self.values,
+            filename=filename
+        )
+        self.task_generate.start()
+        self.task_generate.on_generate_start.connect(lambda: self.on_generate_document_start())
+        self.task_generate.on_generate_finish.connect(lambda: self.on_generate_document_finish())
+        self.task_generate.on_generate_success.connect(lambda file: self.on_generate_document_success(file))
+        self.task_generate.on_generate_fail.connect(lambda error: self.on_generate_document_fail(error))
 
+    def on_generate_document_start(self):
+        """On generate document task start"""
+        self.setEnabled(False)
+
+    def on_generate_document_finish(self):
+        """On generate document task finish"""
+        self.setEnabled(True)
+
+    def on_generate_document_success(self, filename):
+        """On generate document task success"""
         parent = str(Path(filename).parent)
         file = str(Path(filename).name)
         QMessageBox.information(self, 'Success',
                                 f'Document <a href="file:///{parent}">{file}</a> generated successfully!')
+
+    def on_generate_document_fail(self, error):
+        """On generate document task fail"""
+        QMessageBox.warning(self, 'Error', f'An error occurred when generating document. <br/>Error: {error}')
 
     def on_accepted(self):
         """Accepted signal"""

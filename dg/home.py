@@ -21,6 +21,7 @@ from dg.contrib import (
     upload_files
 )
 from dg.generator import GeneratorWindow
+from dg.task import TaskUploadTemplates
 from dg.templates import TemplatesWindow
 
 
@@ -130,9 +131,30 @@ class HomeWindow(QMainWindow):
         if not filenames:
             return
 
-        uploaded_files = upload_files(filenames=filenames)
+        self.task_upload = TaskUploadTemplates(parent=self, filenames=filenames)  # noqa
+        self.task_upload.start()
+        self.task_upload.on_upload_start.connect(lambda: self.on_upload_templates_start())
+        self.task_upload.on_upload_finish.connect(lambda: self.on_upload_templates_finish())
+        self.task_upload.on_upload_success.connect(lambda files: self.on_upload_templates_success(files))
+        self.task_upload.on_upload_fail.connect(lambda error: self.on_upload_templates_fail(error))
+
+    def on_upload_templates_start(self):
+        """On upload templates task start"""
+        self.setEnabled(False)
+
+    def on_upload_templates_finish(self):
+        """On upload templates task finish"""
+        self.setEnabled(True)
+
+    def on_upload_templates_success(self, files):
+        """On upload templates task success"""
+        uploaded_files = '<br>'.join(files)
         QMessageBox.information(self, 'Success', f'<b>{uploaded_files}</b> uploaded successfully!')
         self.on_templates_triggered()
+
+    def on_upload_templates_fail(self, error):
+        """On upload templates task fail"""
+        QMessageBox.information(self, 'Error', f'Error on upload file! <br>Error: {error}')
 
     def on_templates_selected(self, name):
         """On template selected"""
