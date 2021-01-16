@@ -57,7 +57,6 @@ class HomeWindow(QMainWindow):
         QListWidget, QLineEdit#txt_search { border: 1 solid lightgray; }
         QPlainTextEdit, QLineEdit { border: 1 solid #A7AAA5; padding: 5; }
         QScrollArea { border: 0 solid; }
-        QToolBar { border: 0 solid; border-bottom: 1 solid #E3E3E3; border-top: 1 solid #E3E3E3; }
         QWidget#scrollWidget { background-color: white; }
         """)
 
