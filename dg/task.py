@@ -1,3 +1,5 @@
+import logging
+
 from PyQt5.QtCore import QThread, pyqtSignal
 
 from dg.contrib import (
@@ -5,6 +7,8 @@ from dg.contrib import (
     upload_files,
     generate_document
 )
+
+logger = logging.getLogger()
 
 
 class TaskExtractVariables(QThread):
@@ -27,6 +31,7 @@ class TaskExtractVariables(QThread):
             self.on_extract_success.emit(variables)
         except Exception as ex:
             self.on_extract_fail.emit(str(ex))
+            logger.exception(ex)
         finally:
             self.on_extract_finish.emit()
 
@@ -51,6 +56,7 @@ class TaskUploadTemplates(QThread):
             self.on_upload_success.emit(uploaded_files)
         except Exception as ex:
             self.on_upload_fail.emit(str(ex))
+            logger.exception(ex)
         finally:
             self.on_upload_finish.emit()
 
@@ -76,5 +82,6 @@ class TaskGenerateDocument(QThread):
             self.on_generate_success.emit(self.filename)
         except Exception as ex:
             self.on_generate_fail.emit(str(ex))
+            logger.exception(ex)
         finally:
             self.on_generate_finish.emit()

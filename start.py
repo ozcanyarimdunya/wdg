@@ -1,23 +1,64 @@
+try:
+    from PyQt5.QtCore import QLockFile, QDir
+
+    lockfile = QLockFile(QDir.tempPath() + '/wdg.lock')
+    is_single = lockfile.tryLock(100)
+except Exception as e:
+    print(e)
+    is_single = True
+import logging
 import sys
+from logging.handlers import RotatingFileHandler
 
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QApplication, QMessageBox
 
-from dg import ICONS_DIR
+from dg import (
+    ICONS_DIR,
+    LOG_DIR
+)
 from dg.home import HomeWindow
 
-try:
-    from PyQt5.QtWinExtras import QtWin  # noqa
+log_file = LOG_DIR / 'app.log'
+logging.basicConfig(  # noqa
+    level=logging.INFO,
+    format="[%(asctime)s]:%(levelname)s %(name)s :%(module)s/%(funcName)s,%(lineno)d: %(message)s",
+    handlers=[RotatingFileHandler(str(log_file))]
+)
+logger = logging.getLogger()
 
-    app_id = 'semiworld.org.tools.dg'
-    QtWin.setCurrentProcessExplicitAppUserModelID(app_id)  # noqa
-except ImportError:
-    pass
+
+def define_win_extras():
+    """Windows only definition"""
+    try:
+        from PyQt5.QtWinExtras import QtWin  # noqa
+
+        app_id = 'semiworld.org.tools.wdg'
+        QtWin.setCurrentProcessExplicitAppUserModelID(app_id)  # noqa
+    except ImportError:
+        pass
+
+
+def main():
+    """Main function to run application"""
+    try:
+        logger.info("Starting application")
+        app = QApplication(sys.argv)
+        ico = ICONS_DIR / 'icon.ico'
+        app.setWindowIcon(QIcon(str(ico)))
+        window = HomeWindow()
+        if not is_single:
+            QMessageBox.warning(window, 'Error', 'Application is already running!')
+            exit(0)
+
+        window.show()
+        sys.exit(app.exec_())
+    except Exception as ex:
+        logger.exception(ex)
+    finally:
+        logger.info("Exiting application")
+
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    icon = ICONS_DIR / 'icon.png'
-    app.setWindowIcon(QIcon(str(icon)))
-    window = HomeWindow()
-    window.show()
-    sys.exit(app.exec_())
+    define_win_extras()
+    main()

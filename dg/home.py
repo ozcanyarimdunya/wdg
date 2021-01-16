@@ -14,7 +14,11 @@ from PyQt5.QtWidgets import (
 
 from dg import (
     UI_DIR,
-    TEMPLATES_DIR
+    TEMPLATES_DIR,
+    __version__,
+    __app__,
+    __website__,
+    __author__
 )
 from dg.generator import GeneratorWindow
 from dg.task import TaskExtractVariables, TaskUploadTemplates
@@ -181,5 +185,6 @@ class HomeWindow(QMainWindow):
 
     def on_about_triggered(self):
         """On about action triggered"""
-        QMessageBox.about(self, 'Who am I ?',
-                          'Created <b>@2021</b> by <a href="http://semiworld.org">Özcan YARIMDÜNYA</a> with 💖💖💖 ')
+        QMessageBox.about(self, __app__,
+                          f'<br>Created <b>@2021</b> by <a href="{__website__}">{__author__}</a> with 💖💖💖 '
+                          f'<br><br>Version: <b>{__version__}</b>')
