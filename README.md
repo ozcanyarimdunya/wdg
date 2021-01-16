@@ -4,8 +4,7 @@ This application intend to generate word documents from the template by using ji
 
 Things to do respectively;
 
-- Create a template by using `{{ fieldname }}` syntax in the template where you want to text be dynamic.
-- Take the demo as sample for the template word document.
+- Create a template by using `{{ fieldname }}` syntax in the template where you want text be dynamic.
 
 ## Download
 
@@ -25,7 +24,7 @@ Download application from this [LINK.](https://github.com/ozcanyarimdunya/dg/rel
 - Dynamic fields will be rendered automatically.
   ![3.png](ss/3.png)
 
-- Fill the form, click **Ok** button and select path where you want generated file to be saved
+- Fill the form, click **Generate** button and select path where you want generated file to be saved
   ![4.png](ss/4.png)
 
 - Check the generated document!
