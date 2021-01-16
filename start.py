@@ -23,7 +23,10 @@ log_file = LOG_DIR / 'app.log'
 logging.basicConfig(  # noqa
     level=logging.INFO,
     format="[%(asctime)s]:%(levelname)s %(name)s :%(module)s/%(funcName)s,%(lineno)d: %(message)s",
-    handlers=[RotatingFileHandler(str(log_file))]
+    handlers=[
+        RotatingFileHandler(str(log_file)),
+        logging.StreamHandler()
+    ]
 )
 logger = logging.getLogger()
 
