@@ -78,6 +78,7 @@ class TemplatesWindow(QDialog):
                 self.list_widget.addItem(item)
 
     def on_delete_key_pressed(self, event: QKeyEvent):
+        """On delete key pressed"""
         if event.key() == Qt.Key_Delete:
             if self.list_widget.selectedItems():
                 self.on_delete_clicked()

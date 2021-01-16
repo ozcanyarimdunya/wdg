@@ -12,7 +12,7 @@ Download application from this [LINK.](https://github.com/ozcanyarimdunya/dg/rel
 
 ## Screenshots
 
-- Create a word document as template.
+- Create a Word document as template.
   ![0.png](ss/0.png)
 
 - Open application, click **Upload Templates** and select template you have generated.

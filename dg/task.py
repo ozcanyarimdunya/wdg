@@ -62,6 +62,7 @@ class TaskUploadTemplates(QThread):
 
 
 class TaskGenerateDocument(QThread):
+    """Task Generate Document"""
     on_generate_start = pyqtSignal()
     on_generate_finish = pyqtSignal()
     on_generate_success = pyqtSignal(str)

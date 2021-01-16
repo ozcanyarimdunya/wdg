@@ -3,9 +3,9 @@ try:
 
     lockfile = QLockFile(QDir.tempPath() + '/wdg.lock')
     is_single = lockfile.tryLock(100)
-except Exception as e:
-    print(e)
+except:
     is_single = True
+
 import logging
 import sys
 from logging.handlers import RotatingFileHandler

@@ -169,13 +169,13 @@ class HomeWindow(QMainWindow):
         self.task_extract.on_extract_fail.connect(lambda error: self.on_extract_variables_fail(error))
 
     def on_extract_variables_success(self, variables, name):
-        """On extract variables task success"""""
+        """On extract variables task success"""
         window = GeneratorWindow(variables=variables, name=name)
         self.tab_widget.addTab(window, name)
         self.tab_widget.setCurrentWidget(window)
 
     def on_extract_variables_fail(self, error):
-        """On extract variables task fail"""""
+        """On extract variables task fail"""
         QMessageBox.warning(self, 'Error', f'An error occurred when parsing template. <br/>Error: {error}')
 
     def on_generate_triggered(self):
