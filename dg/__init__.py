@@ -1,6 +1,6 @@
 import pathlib
 
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 __author__ = 'Özcan YARIMDÜNYA'
 __website__ = 'http://semiworld.org'
 __app__ = 'Word Document Generator'

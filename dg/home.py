@@ -38,7 +38,8 @@ class HomeWindow(QMainWindow):
     action_templates: QAction
     action_upload: QAction
     action_quit: QAction
-    action_close_tab: QAction
+    action_generate: QAction
+    action_discard: QAction
     action_close_all: QAction
     action_about: QAction
 
@@ -70,7 +71,8 @@ class HomeWindow(QMainWindow):
         self.action_quit.triggered.connect(lambda: self.on_quit_triggered())
         self.action_templates.triggered.connect(lambda: self.on_templates_triggered())
         self.action_upload.triggered.connect(lambda: self.on_upload_triggered())
-        self.action_close_tab.triggered.connect(lambda: self.on_close_tab_triggered())
+        self.action_generate.triggered.connect(lambda: self.on_generate_triggered())
+        self.action_discard.triggered.connect(lambda: self.on_discard_triggered())
         self.action_close_all.triggered.connect(lambda: self.on_close_all_triggered())
         self.closeEvent = lambda event: self.on_quit_triggered()  # noqa
 
@@ -80,9 +82,6 @@ class HomeWindow(QMainWindow):
         self.tab_widget.currentChanged.connect(lambda index: self.on_tab_changed(index))
         self.toolbar.addActions([self.action_templates, self.action_upload])
         self.toolbar.addSeparator()
-        self.toolbar.addActions([self.action_close_tab, self.action_close_all])
-        self.toolbar.addSeparator()
-        self.toolbar.addAction(self.action_about)
 
     def show_initial_message(self):
         """Show statusbar message"""
@@ -91,8 +90,16 @@ class HomeWindow(QMainWindow):
     def on_tab_changed(self, index):
         """On tab changed"""
         has_tab = index >= 0
-        self.action_close_tab.setEnabled(has_tab)
         self.action_close_all.setEnabled(has_tab)
+        self.action_generate.setEnabled(has_tab)
+        self.action_discard.setEnabled(has_tab)
+
+        if has_tab:
+            self.toolbar.addAction(self.action_generate)
+            self.toolbar.addAction(self.action_discard)
+        else:
+            self.toolbar.removeAction(self.action_generate)
+            self.toolbar.removeAction(self.action_discard)
 
     def on_tab_closed(self, index):
         """On tab closed"""
@@ -167,15 +174,17 @@ class HomeWindow(QMainWindow):
         self.tab_widget.addTab(window, name)
         self.tab_widget.setCurrentWidget(window)
 
-        index = self.tab_widget.indexOf(window)
-        window.on_cancel.connect(lambda: self.on_tab_closed(index))
-
     def on_extract_variables_fail(self, error):
         """On extract variables task fail"""""
         QMessageBox.warning(self, 'Error', f'An error occurred when parsing template. <br/>Error: {error}')
 
-    def on_close_tab_triggered(self):
-        """On close current tab triggered"""
+    def on_generate_triggered(self):
+        """On generate action triggered"""
+        window: GeneratorWindow = self.tab_widget.currentWidget()
+        window.generate()
+
+    def on_discard_triggered(self):
+        """On discard action triggered"""
         self.tab_widget.removeTab(self.tab_widget.currentIndex())
 
     def on_close_all_triggered(self):

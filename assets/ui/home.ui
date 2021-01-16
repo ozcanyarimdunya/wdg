@@ -71,7 +71,9 @@
     <property name="title">
      <string>Window</string>
     </property>
-    <addaction name="action_close_tab"/>
+    <addaction name="action_generate"/>
+    <addaction name="action_discard"/>
+    <addaction name="separator"/>
     <addaction name="action_close_all"/>
    </widget>
    <widget class="QMenu" name="menu_help">
@@ -171,6 +173,36 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+U</string>
+   </property>
+  </action>
+  <action name="action_generate">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/ok.png</normaloff>../icons/ok.png</iconset>
+   </property>
+   <property name="text">
+    <string>Generate</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Return</string>
+   </property>
+  </action>
+  <action name="action_discard">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/cancel.png</normaloff>../icons/cancel.png</iconset>
+   </property>
+   <property name="text">
+    <string>Discard</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+W</string>
    </property>
   </action>
  </widget>

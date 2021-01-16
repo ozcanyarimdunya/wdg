@@ -2,15 +2,9 @@ import re
 from pathlib import Path
 
 from PyQt5 import uic  # noqa
-from PyQt5.QtCore import (
-    pyqtSignal,
-    QSize
-)
-from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (
     QWidget,
     QFormLayout,
-    QDialogButtonBox,
     QLabel,
     QLineEdit,
     QMessageBox,
@@ -19,7 +13,6 @@ from PyQt5.QtWidgets import (
 
 from dg import (
     UI_DIR,
-    ICONS_DIR,
     TEMPLATES_DIR
 )
 from dg.task import TaskGenerateDocument
@@ -29,10 +22,8 @@ class GeneratorWindow(QWidget):
     """
     Dynamic Generated Window
     """
-    on_cancel = pyqtSignal()
     values = {}
     layout: QFormLayout
-    button_box: QDialogButtonBox
 
     def __init__(self, variables, name):
         """Initialise"""
@@ -40,24 +31,12 @@ class GeneratorWindow(QWidget):
         self.variables = variables
         self.name = name
         self.setup_ui()
-        self.setup_buttonbox()
         self.create_form_box()
 
     def setup_ui(self):
         """Setup ui"""
         ui_path = UI_DIR / 'generator.ui'
         uic.loadUi(str(ui_path), self)
-
-    def setup_buttonbox(self):
-        """Setup buttonbox"""
-        btn_ok = self.button_box.button(QDialogButtonBox.Ok)
-        btn_ok.setIcon(QIcon(str(ICONS_DIR.joinpath('ok.png'))))
-        btn_ok.setIconSize(QSize(16, 16))
-        btn_ok.clicked.connect(lambda: self.on_accepted())
-        btn_cancel = self.button_box.button(QDialogButtonBox.Cancel)
-        btn_cancel.setIcon(QIcon(str(ICONS_DIR.joinpath('cancel.png'))))
-        btn_cancel.setIconSize(QSize(16, 16))
-        btn_cancel.clicked.connect(lambda: self.on_rejected())
 
     @staticmethod
     def normalize(string):
@@ -128,14 +107,10 @@ class GeneratorWindow(QWidget):
         """On generate document task fail"""
         QMessageBox.warning(self, 'Error', f'An error occurred when generating document. <br/>Error: {error}')
 
-    def on_accepted(self):
-        """Accepted signal"""
+    def generate(self):
+        """Generate document"""
         try:
             self.set_values()
             self.render_template()
         except Exception as ex:
             QMessageBox.warning(self, 'Error', f'An error occurred: {str(ex)}')
-
-    def on_rejected(self):
-        """Rejected signal"""
-        self.on_cancel.emit()

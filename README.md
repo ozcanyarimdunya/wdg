@@ -9,7 +9,7 @@ Things to do respectively;
 
 ## Download
 
-Download application from this [LINK.](https://github.com/ozcanyarimdunya/dg/releases/download/1.0.0/Word.Document.Generator.exe)
+Download application from this [LINK.](https://github.com/ozcanyarimdunya/dg/releases/download/1.0.1/Word.Document.Generator.exe)
 
 ## Screenshots
 

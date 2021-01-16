@@ -40,7 +40,7 @@
         <x>0</x>
         <y>0</y>
         <width>392</width>
-        <height>436</height>
+        <height>477</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout">
@@ -49,19 +49,6 @@
        </item>
       </layout>
      </widget>
-    </widget>
-   </item>
-   <item>
-    <widget class="QDialogButtonBox" name="button_box">
-     <property name="font">
-      <font>
-       <family>Segoe UI</family>
-       <pointsize>11</pointsize>
-      </font>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
     </widget>
    </item>
   </layout>
