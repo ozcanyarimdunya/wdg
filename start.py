@@ -17,6 +17,7 @@ from dg import (
     ICONS_DIR,
     LOG_DIR
 )
+from dg.contrib import get_style
 from dg.home import HomeWindow
 
 log_file = LOG_DIR / 'app.log'
@@ -47,6 +48,7 @@ def main():
     try:
         logger.info("Starting application")
         app = QApplication(sys.argv)
+        app.setStyleSheet(get_style())
         ico = ICONS_DIR / 'icon.ico'
         app.setWindowIcon(QIcon(str(ico)))
         window = HomeWindow()

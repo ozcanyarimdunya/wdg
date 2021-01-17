@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from PyQt5 import uic  # noqa
+from PyQt5.QtCore import QSettings
 from PyQt5.QtWidgets import (
     QMainWindow,
     QTabWidget,
@@ -9,10 +10,11 @@ from PyQt5.QtWidgets import (
     QAction,
     QToolBar,
     QMessageBox,
-    QFileDialog,
+    QFileDialog
 )
 
 from dg import (
+    SETTINGS_FILE,
     UI_DIR,
     TEMPLATES_DIR,
     __version__,
@@ -21,6 +23,7 @@ from dg import (
     __author__
 )
 from dg.generator import GeneratorWindow
+from dg.settings import SettingsWindow
 from dg.task import TaskExtractVariables, TaskUploadTemplates
 from dg.templates import TemplatesWindow
 
@@ -37,6 +40,7 @@ class HomeWindow(QMainWindow):
     menu_help: QMenu
     action_templates: QAction
     action_upload: QAction
+    action_settings: QAction
     action_quit: QAction
     action_generate: QAction
     action_discard: QAction
@@ -50,26 +54,19 @@ class HomeWindow(QMainWindow):
         self.setup_actions()
         self.setup_toolbar()
         self.show_initial_message()
+        self.settings = QSettings(str(SETTINGS_FILE), QSettings.IniFormat)
 
     def setup_ui(self):
         """Setup ui"""
         ui_path = UI_DIR / 'home.ui'
         uic.loadUi(str(ui_path), self)
-        self.setStyleSheet("""
-        QDockWidget, QMenuBar { background-color: transparent; } 
-        QListWidget::item { border-bottom: 1 solid lightgray; }
-        QListWidget::item:selected { background-color: white; }
-        QListWidget, QLineEdit#txt_search { border: 1 solid lightgray; }
-        QPlainTextEdit, QLineEdit { border: 1 solid #A7AAA5; padding: 5; }
-        QScrollArea { border: 0 solid; }
-        QWidget#scrollWidget { background-color: white; }
-        """)
 
     def setup_actions(self):
         """Setup actions"""
         self.action_about.triggered.connect(lambda: self.on_about_triggered())
         self.action_quit.triggered.connect(lambda: self.on_quit_triggered())
         self.action_templates.triggered.connect(lambda: self.on_templates_triggered())
+        self.action_settings.triggered.connect(lambda: self.on_settings_triggered())
         self.action_upload.triggered.connect(lambda: self.on_upload_triggered())
         self.action_generate.triggered.connect(lambda: self.on_generate_triggered())
         self.action_discard.triggered.connect(lambda: self.on_discard_triggered())
@@ -127,11 +124,16 @@ class HomeWindow(QMainWindow):
         window.show()
         window.on_save.connect(lambda name: self.on_templates_selected(name))
 
+    def on_settings_triggered(self):
+        """On settings action triggered"""
+        window = SettingsWindow(self)
+        window.show()
+
     def on_upload_triggered(self):
         """On upload action triggered"""
         directory = str(Path.home().joinpath('Desktop'))
         options = QFileDialog.Options()
-        filenames, _ = QFileDialog.getOpenFileNames(self, "Upload template", directory,
+        filenames, _ = QFileDialog.getOpenFileNames(self, "Upload templates", directory,
                                                     "Docx Files (*.docx)", options=options)
 
         if not filenames:
@@ -148,7 +150,6 @@ class HomeWindow(QMainWindow):
         """On upload templates task success"""
         uploaded_files = '<br>'.join(files)
         QMessageBox.information(self, 'Success', f'<b>{uploaded_files}</b> uploaded successfully!')
-        self.on_templates_triggered()
 
     def on_upload_templates_fail(self, error):
         """On upload templates task fail"""

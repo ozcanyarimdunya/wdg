@@ -1,7 +1,9 @@
 import shutil
 from pathlib import Path
 
+import qdarkstyle
 import textract
+from PyQt5.QtCore import QSettings
 from docxtpl import DocxTemplate
 from jinja2 import (
     BaseLoader,
@@ -9,7 +11,11 @@ from jinja2 import (
     meta
 )
 
-from dg import TEMPLATES_DIR
+from dg import (
+    TEMPLATES_DIR,
+    SETTINGS_FILE,
+    STYLES_DIR
+)
 
 
 def extract_variables(filename):
@@ -47,3 +53,15 @@ def upload_files(filenames):
         uploaded_files.append(destination.name)
 
     return uploaded_files
+
+
+def get_style():
+    """Get theme"""
+    settings = QSettings(str(SETTINGS_FILE), QSettings.IniFormat)
+    theme = settings.value('theme', 'normal')
+    if theme == 'dark':
+        stylesheet = qdarkstyle.load_stylesheet(qt_api='pyqt5')
+        stylesheet += STYLES_DIR.joinpath('dark.qss').read_text()
+        return stylesheet
+
+    return STYLES_DIR.joinpath('normal.qss').read_text()

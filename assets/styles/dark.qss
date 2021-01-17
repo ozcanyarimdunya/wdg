@@ -1,0 +1,9 @@
+QMenuBar, QToolBar, QToolBar QToolButton { background-color: transparent; }
+
+QLineEdit { padding: 5;}
+
+QScrollArea { border: 0 solid; }
+
+QListWidget::item {padding: 5;}
+
+QPushButton { padding: 5; }

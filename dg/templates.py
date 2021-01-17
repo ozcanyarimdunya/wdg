@@ -39,10 +39,7 @@ class TemplatesWindow(QDialog):
         """Setup ui"""
         ui_path = UI_DIR / 'templates.ui'
         uic.loadUi(str(ui_path), self)
-        self.setStyleSheet("""
-        QListWidget::item:selected {color: white; background-color: #0080FF; }
-        QListWidget::item {padding: 10;}
-        """)
+        self.setWindowFlag(Qt.WindowContextHelpButtonHint, False)
 
     def setup_buttonbox(self):
         """Setup buttonbox"""

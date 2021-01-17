@@ -1,0 +1,11 @@
+QMenuBar { background-color: transparent; }
+
+QLineEdit { border: 1 solid #A7AAA5; padding: 5; border-radius: 4 }
+QLineEdit:hover { border-color: #0080FF; }
+QLineEdit:focus { border-color: #0080FF; }
+
+QScrollArea { border: 0 solid; }
+QTabWidget QWidget { background-color: white; }
+
+QListWidget::item {padding: 5;}
+QListWidget::item:selected {color: white; background-color: #0080FF; }

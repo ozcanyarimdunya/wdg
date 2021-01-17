@@ -65,6 +65,8 @@
     <addaction name="action_templates"/>
     <addaction name="action_upload"/>
     <addaction name="separator"/>
+    <addaction name="action_settings"/>
+    <addaction name="separator"/>
     <addaction name="action_quit"/>
    </widget>
    <widget class="QMenu" name="menu_window">
@@ -203,6 +205,31 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+W</string>
+   </property>
+  </action>
+  <action name="action_settings">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/settings.png</normaloff>../icons/settings.png</iconset>
+   </property>
+   <property name="text">
+    <string>Settings</string>
+   </property>
+  </action>
+  <action name="action_theme_normal">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Normal</string>
+   </property>
+  </action>
+  <action name="action_theme_dark">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Dark</string>
    </property>
   </action>
  </widget>

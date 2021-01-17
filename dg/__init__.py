@@ -1,6 +1,6 @@
 import pathlib
 
-__version__ = '1.0.2'
+__version__ = '1.0.3'
 __author__ = 'Özcan YARIMDÜNYA'
 __website__ = 'http://semiworld.org'
 __app__ = 'Word Document Generator'
@@ -12,6 +12,8 @@ TEMPLATES_DIR = DOCUMENT_DIR / 'templates'
 LOG_DIR = DOCUMENT_DIR / 'logs'
 ICONS_DIR = ASSETS_DIR / 'icons'
 UI_DIR = ASSETS_DIR / 'ui'
+STYLES_DIR = ASSETS_DIR / 'styles'
+SETTINGS_FILE = DOCUMENT_DIR / 'settings.ini'
 
 
 def initialise_sample():
