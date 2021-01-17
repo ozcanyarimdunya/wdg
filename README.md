@@ -8,7 +8,7 @@ Things to do respectively;
 
 ## Download
 
-Download application from this [LINK.](https://github.com/ozcanyarimdunya/dg/releases/download/1.0.3/Word.Document.Generator.exe)
+Download application from this [LINK.](https://github.com/ozcanyarimdunya/dg/releases/download/1.0.4/Word.Document.Generator.exe)
 
 ## Screenshots
 
