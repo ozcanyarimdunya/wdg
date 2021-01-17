@@ -66,6 +66,7 @@ class TemplatesWindow(QDialog):
 
     def load_templates(self):
         """Load templates"""
+        self.button_box.button(QDialogButtonBox.Reset).setEnabled(False)
         self.list_widget.clear()
         for each in TEMPLATES_DIR.iterdir():
             if each.name.endswith('.docx'):
@@ -99,6 +100,10 @@ class TemplatesWindow(QDialog):
     def on_delete_clicked(self):
         """Delete triggered"""
         item = self.list_widget.currentItem()
+
+        if not item:
+            return
+
         answer = QMessageBox.question(self, f'Delete {item.text()}?',
                                       f'Do you really want to delete template permanently?',
                                       QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
