@@ -2,6 +2,7 @@ from pathlib import Path
 
 from PyQt5 import uic  # noqa
 from PyQt5.QtCore import QSettings
+from PyQt5.QtGui import QIcon, QContextMenuEvent
 from PyQt5.QtWidgets import (
     QMainWindow,
     QTabWidget,
@@ -10,13 +11,18 @@ from PyQt5.QtWidgets import (
     QAction,
     QToolBar,
     QMessageBox,
-    QFileDialog
+    QFileDialog,
+    QDockWidget,
+    QListWidget,
+    QWidget,
+    QListWidgetItem
 )
 
 from dg import (
     SETTINGS_FILE,
     UI_DIR,
     TEMPLATES_DIR,
+    ICONS_DIR,
     __version__,
     __app__,
     __website__,
@@ -25,7 +31,6 @@ from dg import (
 from dg.generator import GeneratorWindow
 from dg.settings import SettingsWindow
 from dg.task import TaskExtractVariables, TaskUploadTemplates
-from dg.templates import TemplatesWindow
 
 
 class HomeWindow(QMainWindow):
@@ -38,7 +43,6 @@ class HomeWindow(QMainWindow):
     menu_file: QMenu
     menu_window: QMenu
     menu_help: QMenu
-    action_templates: QAction
     action_upload: QAction
     action_settings: QAction
     action_quit: QAction
@@ -46,13 +50,14 @@ class HomeWindow(QMainWindow):
     action_discard: QAction
     action_close_all: QAction
     action_about: QAction
+    dock_widget: QDockWidget
+    list_widget: QListWidget
 
     def __init__(self):
         """Initialise"""
         super().__init__()
         self.setup_ui()
-        self.setup_actions()
-        self.setup_toolbar()
+        self.load_templates()
         self.show_initial_message()
         self.settings = QSettings(str(SETTINGS_FILE), QSettings.IniFormat)
 
@@ -60,29 +65,63 @@ class HomeWindow(QMainWindow):
         """Setup ui"""
         ui_path = UI_DIR / 'home.ui'
         uic.loadUi(str(ui_path), self)
-
-    def setup_actions(self):
-        """Setup actions"""
         self.action_about.triggered.connect(lambda: self.on_about_triggered())
         self.action_quit.triggered.connect(lambda: self.on_quit_triggered())
-        self.action_templates.triggered.connect(lambda: self.on_templates_triggered())
         self.action_settings.triggered.connect(lambda: self.on_settings_triggered())
         self.action_upload.triggered.connect(lambda: self.on_upload_triggered())
         self.action_generate.triggered.connect(lambda: self.on_generate_triggered())
         self.action_discard.triggered.connect(lambda: self.on_discard_triggered())
         self.action_close_all.triggered.connect(lambda: self.on_close_all_triggered())
         self.closeEvent = lambda event: self.on_quit_triggered()  # noqa
-
-    def setup_toolbar(self):
-        """Setup toolbar"""
-        self.tab_widget.tabCloseRequested.connect(lambda index: self.on_tab_closed(index))
+        self.dock_widget.setTitleBarWidget(QWidget())
+        self.list_widget.installEventFilter(self)
+        self.list_widget.itemDoubleClicked.connect(lambda item: self.on_templates_selected(item.text()))
+        self.list_widget.contextMenuEvent = lambda event: self.on_list_widget_context(event)
         self.tab_widget.currentChanged.connect(lambda index: self.on_tab_changed(index))
-        self.toolbar.addActions([self.action_templates, self.action_upload])
+        self.tab_widget.tabCloseRequested.connect(lambda index: self.on_tab_closed(index))
+        self.toolbar.addAction(self.action_upload)
         self.toolbar.addSeparator()
 
     def show_initial_message(self):
         """Show statusbar message"""
-        self.statusbar.showMessage('Click on templates button, select template and start generating!', 5000)
+        self.statusbar.showMessage('Double click on templates and start generating!', 5000)
+
+    def load_templates(self):
+        """Load templates"""
+        self.list_widget.clear()
+        for each in TEMPLATES_DIR.iterdir():
+            if each.name.endswith('.docx'):
+                item = QListWidgetItem(str(each.name))
+                icon = QIcon(str(ICONS_DIR.joinpath('templates.png')))
+                item.setIcon(icon)
+                self.list_widget.addItem(item)
+
+    def on_list_widget_context(self, event: QContextMenuEvent):
+        """On list widget right clicked"""
+        menu = QMenu(parent=self)
+        item = self.list_widget.itemAt(event.pos())
+        if not item:
+            return
+
+        action_run = QAction(QIcon(str(ICONS_DIR / 'use.png')), 'Use This Template', self)
+        action_run.triggered.connect(lambda: self.on_templates_selected(item.text()))
+        menu.addAction(action_run)
+
+        action_delete = QAction(QIcon(str(ICONS_DIR / 'delete.png')), 'Delete Template', self)
+        action_delete.triggered.connect(lambda: self.on_delete_template_clicked(item))
+        menu.addAction(action_delete)
+        menu.exec_(event.globalPos())
+
+    def on_delete_template_clicked(self, item):
+        """Delete template triggered"""
+        answer = QMessageBox.question(self, f'Delete {item.text()}?',
+                                      f'Do you really want to delete template permanently?',
+                                      QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+
+        if answer == QMessageBox.Yes:
+            file = TEMPLATES_DIR.joinpath(item.text())
+            file.unlink(missing_ok=True)
+            self.load_templates()
 
     def on_tab_changed(self, index):
         """On tab changed"""
@@ -118,12 +157,6 @@ class HomeWindow(QMainWindow):
         if answer == QMessageBox.Yes:
             self.close()
 
-    def on_templates_triggered(self):
-        """On templates action triggered"""
-        window = TemplatesWindow(self)
-        window.show()
-        window.on_save.connect(lambda name: self.on_templates_selected(name))
-
     def on_settings_triggered(self):
         """On settings action triggered"""
         window = SettingsWindow(self)
@@ -150,10 +183,11 @@ class HomeWindow(QMainWindow):
         """On upload templates task success"""
         uploaded_files = '<br>'.join(files)
         QMessageBox.information(self, 'Success', f'<b>{uploaded_files}</b> uploaded successfully!')
+        self.load_templates()
 
     def on_upload_templates_fail(self, error):
         """On upload templates task fail"""
-        QMessageBox.information(self, 'Error', f'Error on upload file! <br>Error: {error}')
+        QMessageBox.warning(self, 'Error', f'Error on upload file! <br>Error: {error}')
 
     def on_templates_selected(self, name):
         """On template selected"""
