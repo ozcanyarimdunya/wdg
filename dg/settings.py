@@ -46,6 +46,7 @@ class SettingsWindow(QDialog):
         self.setWindowFlag(Qt.WindowContextHelpButtonHint, False)
 
     def on_theme_selection(self, theme):
+        """On theme selected"""
         self.settings.setValue('theme', theme)
         self.settings.sync()
         qApp.setStyleSheet(get_style())
