@@ -35,17 +35,12 @@ class GeneratorWindow(QWidget, ResourceMixin):
         """Setup ui"""
         uic.loadUi(self.get_ui_path('generator'), self)
 
-    @staticmethod
-    def normalize(string):
-        """Normalize given string"""
-        return re.sub(r'[\W_]+', ' ', string).title()
-
     def create_form_box(self):
         """Dynamic form create"""
         for each in self.variables:
             widget = QLineEdit()
             widget.setObjectName(each)
-            label = QLabel(each.title())  # noqa
+            label = QLabel(each)  # noqa
             self.layout.addRow(label, widget)
 
     def set_values(self):
