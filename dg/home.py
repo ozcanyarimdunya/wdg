@@ -2,7 +2,7 @@ from pathlib import Path
 
 from PyQt5 import uic  # noqa
 from PyQt5.QtCore import QSettings
-from PyQt5.QtGui import QIcon, QContextMenuEvent
+from PyQt5.QtGui import QContextMenuEvent
 from PyQt5.QtWidgets import (
     QMainWindow,
     QTabWidget,
@@ -20,20 +20,19 @@ from PyQt5.QtWidgets import (
 
 from dg import (
     SETTINGS_FILE,
-    UI_DIR,
     TEMPLATES_DIR,
-    ICONS_DIR,
     __version__,
-    __app__,
+    __app_name__,
     __website__,
     __author__
 )
 from dg.generator import GeneratorWindow
+from dg.mixins import ResourceMixin
 from dg.settings import SettingsWindow
 from dg.task import TaskExtractVariables, TaskUploadTemplates
 
 
-class HomeWindow(QMainWindow):
+class HomeWindow(QMainWindow, ResourceMixin):
     """
     Home Window
     """
@@ -63,8 +62,7 @@ class HomeWindow(QMainWindow):
 
     def setup_ui(self):
         """Setup ui"""
-        ui_path = UI_DIR / 'home.ui'
-        uic.loadUi(str(ui_path), self)
+        uic.loadUi(self.get_ui_path('home'), self)
         self.action_about.triggered.connect(lambda: self.on_about_triggered())
         self.action_quit.triggered.connect(lambda: self.on_quit_triggered())
         self.action_settings.triggered.connect(lambda: self.on_settings_triggered())
@@ -92,8 +90,7 @@ class HomeWindow(QMainWindow):
         for each in TEMPLATES_DIR.iterdir():
             if each.name.endswith('.docx'):
                 item = QListWidgetItem(str(each.name))
-                icon = QIcon(str(ICONS_DIR.joinpath('templates.png')))
-                item.setIcon(icon)
+                item.setIcon(self.get_as_icon('templates'))
                 self.list_widget.addItem(item)
 
     def on_list_widget_context(self, event: QContextMenuEvent):
@@ -103,11 +100,11 @@ class HomeWindow(QMainWindow):
         if not item:
             return
 
-        action_run = QAction(QIcon(str(ICONS_DIR / 'use.png')), 'Use This Template', self)
+        action_run = QAction(self.get_as_icon('use'), 'Use This Template', self)
         action_run.triggered.connect(lambda: self.on_templates_selected(item.text()))
         menu.addAction(action_run)
 
-        action_delete = QAction(QIcon(str(ICONS_DIR / 'delete.png')), 'Delete Template', self)
+        action_delete = QAction(self.get_as_icon('delete'), 'Delete Template', self)
         action_delete.triggered.connect(lambda: self.on_delete_template_clicked(item))
         menu.addAction(action_delete)
         menu.exec_(event.globalPos())
@@ -229,6 +226,20 @@ class HomeWindow(QMainWindow):
 
     def on_about_triggered(self):
         """On about action triggered"""
-        QMessageBox.about(self, __app__,
-                          f'<br>Created <b>@2021</b> by <a href="{__website__}">{__author__}</a> with 💖💖💖 '
-                          f'<br><br>Version: <b>{__version__}</b>')
+        about = QMessageBox(self)
+        about.setWindowTitle(f'{__app_name__} {__version__}')
+
+        about.setText(
+            f'<br>'
+            f'<hr>'
+            f'<center>'
+            f'Created <b>@2021</b> '
+            f'<br>'
+            f'by <a href="{__website__}">{__author__}</a> '
+            f'<br>'
+            f'with 💖💖💖'
+            f'</center>'
+            f'<hr>'
+        )
+        about.setIconPixmap(self.get_as_pixmap('pp'))
+        about.show()

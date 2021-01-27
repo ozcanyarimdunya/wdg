@@ -1,12 +1,12 @@
 import pathlib
 
-__version__ = '1.0.5'
+__version__ = '1.0.6'
 __author__ = 'Özcan YARIMDÜNYA'
 __website__ = 'http://semiworld.org'
-__app__ = 'Word Document Generator'
+__app_name__ = 'Word Document Generator'
 
 BASE_DIR = pathlib.Path(__file__).parent.parent
-DOCUMENT_DIR = pathlib.Path.home() / 'Documents' / __app__
+DOCUMENT_DIR = pathlib.Path.home() / 'Documents' / __app_name__
 ASSETS_DIR = BASE_DIR / 'assets'
 TEMPLATES_DIR = DOCUMENT_DIR / 'templates'
 LOG_DIR = DOCUMENT_DIR / 'logs'

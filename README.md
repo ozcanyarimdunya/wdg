@@ -4,17 +4,15 @@ This application intend to generate word documents from the template by using ji
 
 Things to do respectively;
 
-- Create a template by using `{{ fieldname }}` syntax in the template where you want text be dynamic.
+- Create a template by using `{{ fieldname }}` syntax in the template where you want text to be dynamic.
   Careful, `fieldname` should be written together without empty space.
 
 ## Download
 
 Download application from
-this [LINK.](https://github.com/ozcanyarimdunya/dg/releases/download/1.0.5/Word.Document.Generator.exe)
+this [LINK.](https://github.com/ozcanyarimdunya/dg/releases/download/1.0.6/Word.Document.Generator.exe)
 
-## Screenshots
-
-- Create a Word document as template.
+- Create a Word document by using jinja syntax as template.
 - Open application, click **Upload Template** and select template you have generated.
 - Double-click on template name in the left panel.
 - Dynamic fields will be rendered automatically.

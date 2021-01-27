@@ -11,14 +11,12 @@ from PyQt5.QtWidgets import (
     QFileDialog,
 )
 
-from dg import (
-    UI_DIR,
-    TEMPLATES_DIR
-)
+from dg import TEMPLATES_DIR
+from dg.mixins import ResourceMixin
 from dg.task import TaskGenerateDocument
 
 
-class GeneratorWindow(QWidget):
+class GeneratorWindow(QWidget, ResourceMixin):
     """
     Dynamic Generated Window
     """
@@ -35,8 +33,7 @@ class GeneratorWindow(QWidget):
 
     def setup_ui(self):
         """Setup ui"""
-        ui_path = UI_DIR / 'generator.ui'
-        uic.loadUi(str(ui_path), self)
+        uic.loadUi(self.get_ui_path('generator'), self)
 
     @staticmethod
     def normalize(string):

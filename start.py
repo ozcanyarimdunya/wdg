@@ -49,7 +49,7 @@ def main():
         logger.info("Starting application")
         app = QApplication(sys.argv)
         app.setStyleSheet(get_style())
-        ico = ICONS_DIR / 'icon.ico'
+        ico = ICONS_DIR / 'icons.ico'
         app.setWindowIcon(QIcon(str(ico)))
         window = HomeWindow()
         if not is_single:

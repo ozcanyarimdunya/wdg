@@ -1,7 +1,8 @@
 from PyQt5 import uic  # noqa
 from PyQt5.QtCore import (
     pyqtSignal,
-    QSettings, Qt
+    QSettings,
+    Qt
 )
 from PyQt5.QtWidgets import (
     QDialog,
@@ -9,14 +10,12 @@ from PyQt5.QtWidgets import (
     qApp
 )
 
-from dg import (
-    UI_DIR,
-    SETTINGS_FILE
-)
+from dg import SETTINGS_FILE
 from dg.contrib import get_style
+from dg.mixins import ResourceMixin
 
 
-class SettingsWindow(QDialog):
+class SettingsWindow(QDialog, ResourceMixin):
     """
     Settings Window
     """
@@ -31,8 +30,7 @@ class SettingsWindow(QDialog):
 
     def setup_ui(self):
         """Setup ui"""
-        ui_path = UI_DIR / 'settings.ui'
-        uic.loadUi(str(ui_path), self)
+        uic.loadUi(self.get_ui_path('settings'), self)
         self.setWindowFlag(Qt.WindowContextHelpButtonHint, False)
         self.settings = QSettings(str(SETTINGS_FILE), QSettings.IniFormat)  # noqa
         theme = self.settings.value('theme')

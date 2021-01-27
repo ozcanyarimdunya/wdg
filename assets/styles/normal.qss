@@ -7,8 +7,8 @@ QLineEdit:focus { border-color: #0080FF; }
 QScrollArea { border: 0 solid; }
 QTabWidget QWidget { background-color: white; }
 
-QListWidget { border: 1 solid #DBDBDB; }
+QListWidget { border: 1 solid #DBDBDB; padding: 10; background-color: #fff }
 QListWidget::item { padding: 10; }
-QListWidget::item:selected { color: white; background-color: #0080FF; }
+QListWidget::item:selected, QListWidget::item:hover { padding: 2; color: #000; background-color: #E7F3FF; }
 
 QDockWidget QWidget#dockWidgetContents { border-right: 1 solid lightgray; }

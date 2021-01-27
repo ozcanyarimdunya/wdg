@@ -4,7 +4,7 @@ QLineEdit { padding: 5;}
 
 QScrollArea { border: 0 solid; }
 
-QListWidget::item {padding: 5;}
-QListWidget::item { padding: 10; }
+QListWidget::item { padding: 10; color: #fff; }
+QListWidget::item:selected, QListWidget::item:hover { padding: 12; color: #fff; }
 
 QPushButton { padding: 5; }
