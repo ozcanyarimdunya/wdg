@@ -3,7 +3,7 @@ del "Word Document Generator.spec"
 
 pyinstaller ^
 --name="Word Document Generator" ^
---icon="assets\\icons\\icon.ico" ^
+--icon="assets\\icons\\icons.ico" ^
 --windowed ^
 --onefile ^
 --add-data="assets;assets" ^
