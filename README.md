@@ -9,8 +9,8 @@ Things to do respectively;
 
 ## Download
 
-Download application from
-this [LINK.](https://github.com/ozcanyarimdunya/dg/releases/download/1.0.7/Word.Document.Generator.exe)
+Download the latest version of application from
+this [LINK.](https://github.com/ozcanyarimdunya/wdg/releases/latest/download/Word.Document.Generator.exe)
 
 ## Usage
 
