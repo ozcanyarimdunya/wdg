@@ -1,4 +1,3 @@
-import re
 from pathlib import Path
 
 from PyQt5 import uic  # noqa
@@ -37,10 +36,10 @@ class GeneratorWindow(QWidget, ResourceMixin):
 
     def create_form_box(self):
         """Dynamic form create"""
-        for each in self.variables:
+        for each in sorted(self.variables):
             widget = QLineEdit()
             widget.setObjectName(each)
-            label = QLabel(each)  # noqa
+            label = QLabel(each)
             self.layout.addRow(label, widget)
 
     def set_values(self):

@@ -10,12 +10,12 @@ Things to do respectively;
 ## Download
 
 Download application from
-this [LINK.](https://github.com/ozcanyarimdunya/dg/releases/download/1.0.6/Word.Document.Generator.exe)
+this [LINK.](https://github.com/ozcanyarimdunya/dg/releases/download/1.0.7/Word.Document.Generator.exe)
 
 ## Usage
 
 Download usage document from
-this [LINK.](https://github.com/ozcanyarimdunya/wdg/releases/download/1.0.6/Word.Document.Generator.-.Manual.docx)
+this [LINK.](https://github.com/ozcanyarimdunya/wdg/releases/download/1.0.7/Word.Document.Generator.-.Manual.docx)
 
 - Create a Word document by using jinja syntax as template.
 - Open application, click **Upload Template** and select template you have generated.
