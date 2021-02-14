@@ -15,7 +15,7 @@ this [LINK.](https://github.com/ozcanyarimdunya/wdg/releases/latest/download/Wor
 ## Usage
 
 Download usage document from
-this [LINK.](https://github.com/ozcanyarimdunya/wdg/releases/download/1.0.7/Word.Document.Generator.-.Manual.docx)
+this [LINK.](https://github.com/ozcanyarimdunya/wdg/releases/latest/download/Word.Document.Generator-Manual.pdf)
 
 - Create a Word document by using jinja syntax as template.
 - Open application, click **Upload Template** and select template you have generated.
